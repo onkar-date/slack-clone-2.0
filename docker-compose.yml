@@ -1,0 +1,89 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: slack-postgres
+    environment:
+      POSTGRES_DB: slackclone
+      POSTGRES_USER: slackuser
+      POSTGRES_PASSWORD: slackpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - slack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U slackuser -d slackclone"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:7.0
+    container_name: slack-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: slackclone
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - slack-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: slack-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - slack-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Uncomment when ready to run the application
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: slack-backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_PROFILES_ACTIVE: docker
+  #     POSTGRES_URL: jdbc:postgresql://postgres:5432/slackclone
+  #     POSTGRES_USER: slackuser
+  #     POSTGRES_PASSWORD: slackpass
+  #     MONGODB_URI: mongodb://mongodb:27017/slackclone
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     JWT_SECRET: c2xhY2tjbG9uZXNlY3JldGtleWZvcmp3dGVuY3J5cHRpb25hbmRkZWNyeXB0aW9ubXVzdGJlbG9uZ2Vub3VnaA==
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     mongodb:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - slack-network
+
+networks:
+  slack-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  mongodb-data:
+  redis-data:

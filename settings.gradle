@@ -1,0 +1,6 @@
+rootProject.name = 'slack-clone-backend'
+
+include 'app'
+include 'identity-module'
+include 'chat-module'
+include 'shared-module'
