@@ -27,7 +27,7 @@ The application is structured as a multi-module Gradle project:
 ## Prerequisites
 
 - JDK 21
-- Docker and Docker Compose (for databases)
+- Docker and Docker Compose (for databases and other supporting services)
 - Gradle 8.x (wrapper included)
 
 ## Getting Started
