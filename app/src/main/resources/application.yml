@@ -1,0 +1,71 @@
+# Application Configuration
+spring:
+  application:
+    name: slack-clone-backend
+# Datasource / PostgreSQL Configuration
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/slackclone}
+    username: ${POSTGRES_USER:slackuser}
+    password: ${POSTGRES_PASSWORD:slackpass}
+    driver-class-name: org.postgresql.Driver
+
+# Server Configuration
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+# MongoDB Configuration
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/slackclone}
+      auto-index-creation: true
+# Redis Configuration
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:c2xhY2tjbG9uZXNlY3JldGtleWZvcmp3dGVuY3J5cHRpb25hbmRkZWNyeXB0aW9ubXVzdGJlbG9uZ2Vub3VnaA==}
+  expiration: ${JWT_EXPIRATION:3600000}
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.slack.clone: DEBUG
+    org.springframework.web: INFO
+    org.springframework.data.mongodb: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swaggerui
+    operationsSorter: method
