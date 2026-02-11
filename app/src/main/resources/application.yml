@@ -8,6 +8,9 @@ spring:
     username: ${POSTGRES_USER:slackuser}
     password: ${POSTGRES_PASSWORD:slackpass}
     driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 # Server Configuration
 server:
@@ -19,7 +22,7 @@ server:
 # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:update}
+      ddl-auto: ${JPA_DDL_AUTO:validate}
     show-sql: ${JPA_SHOW_SQL:false}
     properties:
       hibernate:
