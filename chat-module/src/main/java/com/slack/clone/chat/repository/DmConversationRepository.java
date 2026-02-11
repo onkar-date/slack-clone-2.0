@@ -3,6 +3,7 @@ package com.slack.clone.chat.repository;
 import com.slack.clone.chat.entity.DmConversation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public interface DmConversationRepository extends JpaRepository<DmConversation, 
     @Query("SELECT d FROM DmConversation d WHERE " +
             "(d.user1Id = :user1Id AND d.user2Id = :user2Id) OR " +
             "(d.user1Id = :user2Id AND d.user2Id = :user1Id)")
-    Optional<DmConversation> findByUserPair(String user1Id, String user2Id);
+    Optional<DmConversation> findByUserPair(@Param("user1Id") String user1Id, @Param("user2Id") String user2Id);
 
     @Query("SELECT d FROM DmConversation d WHERE d.user1Id = :userId OR d.user2Id = :userId")
-    List<DmConversation> findByUserId(String userId);
+    List<DmConversation> findByUserId(@Param("userId")String userId);
 }
